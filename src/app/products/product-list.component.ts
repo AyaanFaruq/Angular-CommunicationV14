@@ -9,12 +9,23 @@ import { ProductService } from './product.service';
 })
 export class ProductListComponent implements OnInit {
   pageTitle = 'Product List';
-  listFilter = '';
+  // listFilter = '';
   showImage = false;
 
   imageWidth = 50;
   imageMargin = 2;
   errorMessage = '';
+
+  //== Getter Setter >>>
+  private _listFilter!: string;
+  get listFilter(): string {
+    return this._listFilter;
+  }
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.performFilter(this._listFilter);
+  }
+  //== Getter Setter<<<
 
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
@@ -30,6 +41,13 @@ export class ProductListComponent implements OnInit {
       error: (err) => (this.errorMessage = err),
     });
   }
+
+  // The Long Way
+
+  // onFilterChange(filter: string): void {
+  //   this.listFilter = filter;
+  //   this.performFilter(this.listFilter);
+  // }
 
   toggleImage(): void {
     this.showImage = !this.showImage;
