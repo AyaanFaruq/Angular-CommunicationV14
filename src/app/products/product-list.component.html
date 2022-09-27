@@ -7,11 +7,12 @@
     <div class="row">
       <div class="col-md-2">Filter by:</div>
       <div class="col-md-4">
-        <input type="text" [(ngModel)]="listFilter" />
+        <input type="text" #filterElement [(ngModel)]="listFilter" />
+      </div>
 
-        <!--The Long Way -->
-        <!-- <input type='text' [ngModel]='listFilter'
-                           (ngModelChange)="onFilterChange($event)" /> -->
+      <div class="col-md-2">Filter Name:</div>
+      <div class="col-md-4">
+        <input type="text" #nameElement [(ngModel)]="filtername" />
       </div>
     </div>
     <div class="row" [hidden]="!listFilter">
