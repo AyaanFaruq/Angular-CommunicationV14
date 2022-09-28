@@ -18,41 +18,25 @@ import { ProductService } from './product.service';
 })
 export class ProductListComponent implements OnInit, AfterViewInit {
   pageTitle = 'Product List';
-  // listFilter = '';
-  filtername = '';
+  listFilter: string;
   showImage = false;
 
   imageWidth = 50;
   imageMargin = 2;
   errorMessage = '';
 
-  @ViewChild('filterElement') filterElementref!: ElementRef;
-  // @ViewChildren('filterElement, nameElement')
-  // inputElementref!: QueryList<ElementRef>;
-
-  @ViewChildren(NgModel)
-  inputElementref!: QueryList<ElementRef>;
-
-  //== Getter Setter >>>
-  private _listFilter!: string;
-  get listFilter(): string {
-    return this._listFilter;
-  }
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.performFilter(this._listFilter);
-  }
-  //== Getter Setter<<<
+  @ViewChild('filterElement') filterElementref: ElementRef; // get access on the native element
+  @ViewChild(NgModel) filterInput: NgModel; // don't have access on the native element
 
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) {} 
 
   ngAfterViewInit(): void {
-    this.filterElementref.nativeElement.focus();
-    //console.log(this.filterElementref);
-    console.log(this.inputElementref);
+    this.filterInput.valueChanges?.subscribe(() =>
+      this.performFilter(this.listFilter)
+    );
   }
 
   ngOnInit(): void {
