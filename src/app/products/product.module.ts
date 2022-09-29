@@ -8,6 +8,7 @@ import { ProductDetailComponent } from './product-detail.component';
 import { ProductEditComponent } from './edit/product-edit.component';
 
 import { ProductEditGuard } from './edit/product-edit-guard.service';
+import { ProductParameterService } from './product-parameter.service';
 
 @NgModule({
   imports: [
@@ -18,14 +19,15 @@ import { ProductEditGuard } from './edit/product-edit-guard.service';
       {
         path: ':id/edit',
         canDeactivate: [ProductEditGuard],
-        component: ProductEditComponent
-      }
-    ])
+        component: ProductEditComponent,
+      },
+    ]),
   ],
   declarations: [
     ProductListComponent,
     ProductDetailComponent,
-    ProductEditComponent
-  ]
+    ProductEditComponent,
+  ],
+  providers: [ProductParameterService],
 })
-export class ProductModule { }
+export class ProductModule {}
