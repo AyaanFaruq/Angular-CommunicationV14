@@ -44,20 +44,21 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe(
-      (products: IProduct[]) => {
+      /* (products: IProduct[]) => {
         this.products = products;
         this.filterComponent.listFilter = this.productParameterService.filterBy;
       },
       (error: any) => (this.errorMessage = <any>error)
+    );*/
+      {
+        next: (products) => {
+          this.products = products;
+          this.filterComponent.listFilter =
+            this.productParameterService.filterBy;
+        },
+        error: (err) => (this.errorMessage = err),
+      }
     );
-
-    //   {
-    //   next: (products) => {
-    //     this.products = products;
-    //     this.performFilter(this.parentListFilter);
-    //   },
-    //   error: (err) => (this.errorMessage = err),
-    // });
   }
 
   onValueChange(value: string): void {
