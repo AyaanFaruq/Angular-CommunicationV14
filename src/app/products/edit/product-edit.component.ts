@@ -7,7 +7,7 @@ import { ProductService } from '../product.service';
 
 @Component({
   templateUrl: './product-edit.component.html',
-  styleUrls: ['./product-edit.component.css']
+  styleUrls: ['./product-edit.component.css'],
 })
 export class ProductEditComponent implements OnInit {
   @ViewChild(NgForm) editForm?: NgForm;
@@ -20,26 +20,24 @@ export class ProductEditComponent implements OnInit {
     return this.editForm?.dirty ? true : false;
   }
 
-  constructor(private productService: ProductService,
+  constructor(
+    private productService: ProductService,
     private router: Router,
-    private route: ActivatedRoute) {
-  }
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(
-      params => {
-        const id = +params['id'];
-        this.getProduct(id);
-      }
-    );
+    this.route.params.subscribe((params) => {
+      const id = +params['id'];
+      this.getProduct(id);
+    });
   }
 
   getProduct(id: number): void {
-    this.productService.getProduct(id)
-      .subscribe({
-        next: product => this.onProductRetrieved(product),
-        error: err => this.errorMessage = err
-      });
+    this.productService.getProduct(id).subscribe({
+      next: (product) => this.onProductRetrieved(product),
+      error: (err) => (this.errorMessage = err),
+    });
   }
 
   onProductRetrieved(product: IProduct): void {
@@ -66,11 +64,10 @@ export class ProductEditComponent implements OnInit {
   deleteProduct(): void {
     if (this.product?.id) {
       if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-        this.productService.deleteProduct(this.product.id)
-          .subscribe({
-            next: () => this.onSaveComplete(),
-            error: err => this.errorMessage = err
-          });
+        this.productService.deleteProduct(this.product.id).subscribe({
+          next: () => this.onSaveComplete(),
+          error: (err) => (this.errorMessage = err),
+        });
       }
     } else {
       // Don't delete, it was never saved.
@@ -80,18 +77,18 @@ export class ProductEditComponent implements OnInit {
 
   saveProduct(): void {
     if (this.editForm?.valid && this.product) {
-      this.productService.saveProduct(this.product)
-        .subscribe({
-          next: () => {
-            if (this.product && this.originalProduct) {
-              // Assign the changes from the copy
-              for (let key in this.product) 
-                (this.originalProduct as any)[key as keyof IProduct] = this.product[key as keyof IProduct];
-              this.onSaveComplete();
-            }
-          },
-          error: err => this.errorMessage = err
-        });
+      this.productService.saveProduct(this.product).subscribe({
+        next: () => {
+          if (this.product && this.originalProduct) {
+            // Assign the changes from the copy
+            for (let key in this.product)
+              (this.originalProduct as any)[key as keyof IProduct] =
+                this.product[key as keyof IProduct];
+            this.onSaveComplete();
+          }
+        },
+        error: (err) => (this.errorMessage = err),
+      });
     } else {
       this.errorMessage = 'Please correct the validation errors.';
     }

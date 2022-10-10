@@ -1,64 +1,55 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { CriteriaComponent } from '../shared/criteria/criteria.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { IProduct } from './product';
-import { ProductParameterService } from './product-parameter.service';
 import { ProductService } from './product.service';
+import { CriteriaComponent } from '../shared/criteria/criteria.component';
+import { ProductParameterService } from './product-parameter.service';
 
 @Component({
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent implements OnInit, AfterViewInit {
+export class ProductListComponent implements OnInit {
   pageTitle = 'Product List';
-  includeDetail: boolean = true;
-
-  // @ViewChild('filterCriteria') filterComponent: CriteriaComponent; //OR
-  @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent;
-  parentListFilter: string;
+  includeDetail = true;
 
   imageWidth = 50;
   imageMargin = 2;
   errorMessage = '';
 
+  filteredProducts: IProduct[] = [];
+  products: IProduct[] = [];
+  // Using the "?" sets the default to undefined
+  // Then need to check for undefined whenever referencing filterComponent
+  @ViewChild(CriteriaComponent) filterComponent?: CriteriaComponent;
+
   get showImage(): boolean {
     return this.productParameterService.showImage;
   }
-
   set showImage(value: boolean) {
     this.productParameterService.showImage = value;
   }
-
-  filteredProducts: IProduct[] = [];
-  products: IProduct[] = [];
 
   constructor(
     private productService: ProductService,
     private productParameterService: ProductParameterService
   ) {}
 
-  ngAfterViewInit(): void {
-    this.parentListFilter = this.filterComponent.listFilter;
-  }
-
   ngOnInit(): void {
-    this.productService.getProducts().subscribe(
-      /* (products: IProduct[]) => {
+    this.productService.getProducts().subscribe({
+      next: (products) => {
         this.products = products;
-        this.filterComponent.listFilter = this.productParameterService.filterBy;
+        // Allows referencing the ViewChild property in ngOnInit and
+        // Prevents the 'Expression has changed after it was checked' error
+        setTimeout(() => {
+          if (this.filterComponent) {
+            this.filterComponent.listFilter =
+              this.productParameterService.filterBy;
+          }
+        });
       },
-      (error: any) => (this.errorMessage = <any>error)
-    );*/
-      {
-        next: (products) => {
-          this.products = products;
-          this.filterComponent.listFilter =
-            this.productParameterService.filterBy;
-        },
-        error: (err) => (this.errorMessage = err),
-      }
-    );
+      error: (err) => (this.errorMessage = err),
+    });
   }
 
   onValueChange(value: string): void {

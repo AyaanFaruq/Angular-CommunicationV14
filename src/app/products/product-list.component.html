@@ -2,8 +2,9 @@
   <div class="card-header">
     {{ pageTitle }}
   </div>
+
   <div class="card-body">
-    <!-- Filter by the Title   -->
+    <!-- Filter by the Title -->
     <div class="row">
       <pm-criteria
         #filterCriteria
@@ -14,8 +15,9 @@
       >
       </pm-criteria>
     </div>
+
     <div class="table-responsive">
-      <table class="table" *ngIf="products && products.length">
+      <table class="table" *ngIf="products?.length">
         <thead>
           <tr>
             <th>
